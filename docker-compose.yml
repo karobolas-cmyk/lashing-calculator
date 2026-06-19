@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  lashing-calculator:
+    build: .
+    image: lashing-calculator:${APP_VERSION:-latest}
+    container_name: lashing_calculator_app
+    ports:
+      - "${APP_PORT:-3000}:${CONTAINER_PORT:-3000}"
+    environment:
+      - PORT=${CONTAINER_PORT:-3000}
+      - NODE_ENV=${NODE_ENV:-production}
+    restart: unless-stopped
