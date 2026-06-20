@@ -7,24 +7,25 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚚</text></svg>">
 </head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-2 sm:p-4">
 
-    <div class="bg-white p-6 rounded-2xl shadow-lg w-full max-w-md relative">
-        <!-- SPRÅKVÄLJARE & TABELLKNAPP -->
-        <div class="absolute top-6 right-6 flex items-center space-x-2">
+    <div class="bg-white p-5 sm:p-6 rounded-2xl shadow-lg w-full max-w-md">
+        
+        <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-100">
             <div class="flex bg-gray-100 p-1 rounded-lg border border-gray-200 text-xs">
-                <button id="langSvBtn" type="button" class="px-1.5 py-0.5 rounded font-bold bg-white shadow-sm">SE</button>
-                <button id="langEnBtn" type="button" class="px-1.5 py-0.5 rounded font-bold text-gray-400">EN</button>
+                <button id="langSvBtn" type="button" class="px-2.5 py-1 rounded font-bold bg-white shadow-sm">SE</button>
+                <button id="langEnBtn" type="button" class="px-2.5 py-1 rounded font-bold text-gray-400">EN</button>
             </div>
-            <button id="openModalBtn" type="button" class="text-xs font-semibold text-blue-600 hover:text-blue-800 bg-blue-50 px-2 py-1.5 rounded-lg border border-blue-200 transition">
+            <button id="openModalBtn" type="button" class="text-xs font-semibold text-blue-600 hover:text-blue-800 bg-blue-50 px-3 py-2 rounded-lg border border-blue-200 transition">
                 📋 <span id="lblViewTable"></span>
             </button>
         </div>
 
-        <h1 class="text-xl font-bold text-gray-800 mb-1 text-left pr-36" id="lblMainTitle"></h1>
-        <p class="text-xs text-gray-500 text-left mb-6" id="lblSubTitle"></p>
+        <div class="text-left mb-6">
+            <h1 class="text-xl font-bold text-gray-800 mb-1" id="lblMainTitle"></h1>
+            <p class="text-xs text-gray-500" id="lblSubTitle"></p>
+        </div>
 
-        <!-- Val av surrningstyp -->
         <div class="mb-4">
             <label class="block text-sm font-semibold text-gray-700 mb-1" id="lblLashingType"></label>
             <select id="lashingTypeSelect" class="w-full p-2.5 bg-blue-50 border border-blue-300 rounded-lg font-medium text-blue-900 focus:ring-2 focus:ring-blue-500">
@@ -33,32 +34,64 @@
             </select>
         </div>
 
-        <!-- Checkbox för halt underlag -->
         <div class="mb-4 flex items-center p-3 bg-red-50 rounded-lg border border-red-200">
             <input type="checkbox" id="hazardCheckbox" class="w-5 h-5 text-red-600 rounded focus:ring-red-500">
             <label for="hazardCheckbox" class="ml-3 text-sm font-semibold text-red-700 cursor-pointer" id="lblHazard"></label>
         </div>
 
         <form id="calcForm" class="space-y-4">
-            <!-- SPÄNNBANDSDATA -->
-            <div class="bg-gray-50 p-3 rounded-xl border border-gray-200 space-y-2">
-                <span class="text-xs font-bold text-gray-500 uppercase tracking-wider" id="lblStrapData"></span>
+            <div class="bg-gray-50 p-3 rounded-xl border border-gray-200 space-y-3">
+                <span class="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1" id="lblStrapData"></span>
+                
                 <div class="grid grid-cols-2 gap-3">
                     <div id="lcFieldDiv">
-                        <label class="block text-xs font-semibold text-gray-600 mb-1" id="lblLc"></label>
+                        <label class="block text-[11px] font-semibold text-gray-600 leading-tight mb-1">
+                            LC<br><span class="text-[10px] text-gray-400 font-normal">(Kapacitet, daN)</span>
+                        </label>
                         <input type="number" id="lcInput" value="1600" min="1" class="w-full p-2 text-sm bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" required>
                     </div>
+                    
                     <div id="stfFieldDiv">
-                        <label class="block text-xs font-semibold text-gray-600 mb-1" id="lblStf"></label>
+                        <label class="block text-[11px] font-semibold text-gray-600 leading-tight mb-1">
+                            STF<br><span class="text-[10px] text-gray-400 font-normal">(Försträckning, daN)</span>
+                        </label>
                         <input type="number" id="stfInput" value="400" min="1" class="w-full p-2 text-sm bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" required>
                     </div>
                 </div>
-                <!-- NY DROPDOWN: Välj vinkelomfång istället för exakta grader -->
+
                 <div>
                     <label class="block text-xs font-semibold text-gray-600 mb-1" id="lblAngleRange"></label>
-                    <select id="angleRangeSelect" class="w-full p-2 text-sm bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                    <select id="angleRangeSelect" class="w-full p-2.5 text-sm bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
                         <option value="steep" id="optAngleSteep"></option>
                         <option value="flat" id="optAngleFlat"></option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="dimensionsDiv" class="bg-amber-50/50 p-3 rounded-xl border border-amber-200/60 space-y-2">
+                <span class="text-xs font-bold text-amber-800 uppercase tracking-wider block mb-1">Godsdimensioner (Tipptest)</span>
+                <div class="grid grid-cols-3 gap-2">
+                    <div>
+                        <label class="block text-[10px] font-semibold text-amber-900 mb-0.5">Höjd (m)</label>
+                        <input type="number" id="heightInput" step="0.01" min="0.1" class="w-full p-1.5 text-xs bg-white border border-amber-300 rounded focus:ring-1 focus:ring-amber-500" placeholder="Ex: 1.6">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-semibold text-amber-900 mb-0.5">Bredd (m)</label>
+                        <input type="number" id="widthInput" step="0.01" min="0.1" class="w-full p-1.5 text-xs bg-white border border-amber-300 rounded focus:ring-1 focus:ring-amber-500" placeholder="Ex: 1.2">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-semibold text-amber-900 mb-0.5">Längd (m)</label>
+                        <input type="number" id="lengthInput" step="0.01" min="0.1" class="w-full p-1.5 text-xs bg-white border border-amber-300 rounded focus:ring-1 focus:ring-amber-500" placeholder="Ex: 1.0">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-semibold text-amber-900 mb-0.5">Stuvning i sidled (Antal rader med gods)</label>
+                    <select id="rowsSelect" class="w-full p-1.5 text-xs bg-white border border-amber-300 rounded focus:ring-1 focus:ring-amber-500">
+                        <option value="1">1 rad godskollin</option>
+                        <option value="2">2 rader godskollin</option>
+                        <option value="3">3 rader godskollin</option>
+                        <option value="4">4 rader godskollin</option>
+                        <option value="5">5 rader godskollin</option>
                     </select>
                 </div>
             </div>
@@ -88,88 +121,112 @@
             <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold p-3 rounded-lg transition" id="btnCalculate"></button>
         </form>
 
-        <!-- Resultat -->
-        <div id="resultDiv" class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-xl hidden space-y-4">
-            <div>
-                <h3 class="font-bold text-blue-900 mb-2 text-center text-lg" id="resTypeHeader"></h3>
-                <div class="text-sm text-blue-800 space-y-1 mb-4">
+        <div id="resultDiv" class="mt-6 bg-blue-50 border border-blue-200 rounded-xl hidden overflow-hidden shadow-inner">
+            
+            <div class="flex bg-blue-900/10 p-1 border-b border-blue-200 text-xs font-semibold text-center">
+                <button type="button" id="tabCapBtn" class="flex-1 py-2 rounded-lg bg-white text-blue-900 shadow-sm transition">📋 Antal band</button>
+                <button type="button" id="tabDiagBtn" class="flex-1 py-2 rounded-lg text-blue-700 hover:text-blue-900 transition">📐 Skiss</button>
+                <button type="button" id="tabCalcBtn" class="flex-1 py-2 rounded-lg text-blue-700 hover:text-blue-900 transition">💡 Formel</button>
+            </div>
+
+            <div id="paneCap" class="p-4 space-y-4">
+                <h3 class="font-bold text-blue-900 text-center text-lg mb-2" id="resTypeHeader"></h3>
+                <div class="text-sm text-blue-800 space-y-1">
                     <p><strong id="resMuLbl"></strong> <span id="resMu"></span></p>
                     <p><strong id="resFactorLbl"></strong> <span id="resFactor"></span></p>
                     <div class="border-t border-blue-200 my-2 pt-2"></div>
+                    
+                    <div id="riskExplanationBox" class="text-xs bg-white border border-blue-200 rounded-lg p-2 mb-3 text-blue-950 font-medium hidden"></div>
+                    <div id="methodSuggestionBox" class="text-xs bg-amber-50 border border-amber-200 rounded-lg p-3 mb-3 text-amber-950 hidden">
+                        <p class="font-bold text-amber-900 mb-1" id="lblTippingWarningTitle"></p>
+                        <p id="lblTippingWarningDesc"></p>
+                    </div>
+
                     <p class="text-xs font-bold uppercase text-blue-900 tracking-wider mb-1" id="resCapHeader"></p>
                     <p>• <span id="resSidewaysLbl"></span> <span id="resSideways" class="font-mono text-gray-900 font-semibold"></span></p>
                     <p>• <span id="resForwardLbl"></span> <span id="resForward" class="font-mono text-gray-900 font-semibold"></span></p>
                     <p>• <span id="resBackwardLbl"></span> <span id="resBackward" class="font-mono text-gray-900 font-semibold"></span></p>
                 </div>
-                <div class="bg-blue-600 text-white text-center p-3 rounded-lg font-bold mb-4" id="resTotalBox"></div>
+                <div class="bg-blue-600 text-white text-center p-3 rounded-lg font-bold" id="resTotalBox"></div>
             </div>
-            
-            <div class="bg-white p-4 rounded-xl border border-blue-100 text-xs text-gray-700 space-y-4 shadow-sm">
-                <h4 class="font-bold text-sm text-blue-900 flex items-center" id="lblHowCalc"></h4>
-                
-<div class="bg-white p-4 rounded-xl border border-blue-100 text-xs text-gray-700 space-y-4 shadow-sm">
-    <h4 class="font-bold text-sm text-blue-900 flex items-center" id="lblHowCalc"></h4>
-    
-    <div id="physicsDiagram" class="w-full h-40 bg-slate-50 rounded-lg border border-slate-200 relative overflow-hidden hidden">
-        <div class="absolute bottom-4 left-0 right-0 h-2 bg-slate-700"></div>
-        
-        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 w-28 h-20 bg-amber-600/10 border-2 border-amber-700 rounded flex flex-col items-center justify-center p-1 shadow-sm">
-            <span class="text-[9px] font-bold text-amber-900 tracking-wide uppercase opacity-70" id="diagLoadText"></span>
-            <span id="diagWeight" class="font-mono font-bold text-amber-950 text-xs"></span>
-        </div>
-        
-        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 w-[120px] h-24 border-t-2 border-x-2 border-blue-600 border-dashed rounded-t pointer-events-none opacity-80"></div>
-        
-        <div class="absolute top-2 left-1/2 -translate-x-1/2 flex flex-col items-center z-10">
-            <span class="text-[9px] text-blue-600 font-extrabold bg-slate-50 px-1 rounded border border-blue-200 shadow-sm">Stf × 2</span>
-            <div class="w-0.5 h-6 bg-blue-600 relative mt-0.5">
-                <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[3px] border-l-transparent border-r-[3px] border-r-transparent border-t-[5px] border-t-blue-600"></div>
+
+            <div id="paneDiag" class="p-4 hidden">
+                <div id="physicsDiagram" class="w-full h-48 bg-slate-50 rounded-xl border border-slate-200 relative flex flex-col justify-between items-center p-3 overflow-hidden shadow-inner">
+                    
+                    <div class="w-full flex justify-between items-start z-10">
+                        <div class="flex items-center bg-white/90 px-2 py-0.5 rounded border border-red-200 shadow-sm">
+                            <span class="text-[10px] text-red-600 font-extrabold mr-1.5" id="diagReqText">Krav</span>
+                            <div class="h-0.5 w-6 bg-red-600 relative">
+                                <div class="absolute top-1/2 right-0 -translate-y-1/2 w-0 h-0 border-t-[3px] border-t-transparent border-b-[3px] border-b-transparent border-l-[4px] border-l-red-600"></div>
+                            </div>
+                        </div>
+
+                        <span id="geoTopOverLabel" class="text-[9px] text-blue-600 font-extrabold bg-blue-50 px-2 py-0.5 rounded border border-blue-200 shadow-sm hidden">Stf × 2</span>
+                        <span id="geoDirectLabel" class="text-[9px] text-blue-600 font-extrabold bg-blue-50 px-2 py-0.5 rounded border border-blue-200 shadow-sm hidden">LC Kapacitet</span>
+                    </div>
+
+                    <div class="relative w-full flex justify-center items-center h-20 my-1">
+                        <div id="diagramCargoBox" class="w-28 h-16 bg-amber-600/10 border-2 border-amber-700 rounded flex flex-col items-center justify-center p-1 shadow-sm transition-all duration-300 z-10">
+                            <span class="text-[9px] font-bold text-amber-900 tracking-wide uppercase opacity-60" id="diagLoadText">Last:</span>
+                            <span id="diagWeight" class="font-mono font-bold text-amber-950 text-xs"></span>
+                        </div>
+
+                        <svg class="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 380 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                            <g id="svgTopOverGroup" class="hidden">
+                                <path d="M 100,85 L 134,22 L 246,22 L 280,85" fill="none" stroke="#2563eb" stroke-width="2.5" stroke-dasharray="4,3" />
+                            </g>
+                            <g id="svgDirectGroup" class="hidden">
+                                <path d="M 90,85 L 134,22" fill="none" stroke="#2563eb" stroke-width="2.5" stroke-dasharray="4,3" />
+                                <path d="M 290,85 L 246,22" fill="none" stroke="#2563eb" stroke-width="2.5" stroke-dasharray="4,3" />
+                            </g>
+                        </svg>
+                    </div>
+
+                    <div class="w-full flex flex-col items-center z-10">
+                        <div class="w-full h-1.5 bg-slate-700 rounded-sm mb-1.5"></div>
+                        <div class="w-full flex justify-end">
+                            <div class="flex items-center bg-white/90 px-2 py-0.5 rounded border border-green-200 shadow-sm">
+                                <div class="h-0.5 w-6 bg-green-600 relative mr-1.5">
+                                    <div class="absolute top-1/2 left-0 -translate-y-1/2 w-0 h-0 border-t-[3px] border-t-transparent border-b-[3px] border-b-transparent border-r-[4px] border-r-green-600"></div>
+                                </div>
+                                <span class="text-[10px] text-green-600 font-extrabold" id="diagFricText">Friktion</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
-        </div>
-        
-        <div class="absolute bottom-14 left-4 flex items-center z-10 bg-slate-50/80 p-0.5 rounded border border-slate-100 shadow-sm">
-            <span class="text-[9px] text-red-600 font-extrabold mr-1 shadow-sm" id="diagReqText"></span>
-            <div class="h-0.5 w-8 bg-red-600 relative">
-                <div class="absolute top-1/2 right-0 -translate-y-1/2 w-0 h-0 border-t-[3px] border-t-transparent border-b-[3px] border-b-transparent border-l-[5px] border-l-red-600"></div>
+
+            <div id="paneCalc" class="p-4 hidden">
+                <div class="bg-white p-3 rounded-xl border border-blue-100 text-xs text-gray-700 space-y-4 shadow-sm max-h-[280px] overflow-y-auto">
+                    <h4 class="font-bold text-sm text-blue-900 flex items-center" id="lblHowCalc"></h4>
+                    <div id="explanationText" class="space-y-2 leading-relaxed"></div>
+                </div>
             </div>
-        </div>
-        
-        <div class="absolute bottom-1 right-4 flex items-center z-10 bg-slate-50/80 p-0.5 rounded border border-slate-100 shadow-sm">
-            <div class="h-0.5 w-8 bg-green-600 relative mr-1">
-                <div class="absolute top-1/2 left-0 -translate-y-1/2 w-0 h-0 border-t-[3px] border-t-transparent border-b-[3px] border-b-transparent border-r-[5px] border-r-green-600"></div>
-            </div>
-            <span class="text-[9px] text-green-600 font-extrabold" id="diagFricText"></span>
+
         </div>
     </div>
 
-    <div id="explanationText" class="space-y-2 leading-relaxed"></div>
-</div>
-
-                <div id="explanationText" class="space-y-2 leading-relaxed"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL FÖR KÄLLTABELL -->
-    <div id="tableModal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden">
+    <div id="tableModal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-2 sm:p-4 hidden">
         <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg p-5 max-h-[90vh] flex flex-col">
-            <div class="flex justify-between items-center mb-4 border-b pb-2">
+            <div class="flex justify-between items-center mb-3 border-b pb-2">
                 <div>
-                    <h2 class="font-bold text-gray-800 text-base" id="modalTitle"></h2>
+                    <h2 class="font-bold text-gray-800 text-base" id="modalTitle">Lathundstabeller (TYA)</h2>
                     <p class="text-[11px] text-gray-500" id="modalSubTitle"></p>
                 </div>
                 <button id="closeModalBtn" type="button" class="text-gray-400 hover:text-gray-600 font-bold text-lg px-2">✕</button>
             </div>
+            <div class="mb-4">
+                <label class="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1">Välj tabellvy:</label>
+                <select id="modalTableTypeSelect" class="w-full p-2 text-xs bg-gray-50 border border-gray-300 rounded-lg font-medium text-gray-800 focus:ring-2 focus:ring-blue-500">
+                    <option value="sliding" id="optRiskSliding"></option>
+                    <option value="tippingSideways" id="optRiskTippingSideways"></option>
+                    <option value="tippingForwardBackward" id="optRiskTippingLong"></option>
+                </select>
+            </div>
             <div class="overflow-y-auto flex-1 text-xs">
                 <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="bg-gray-100 text-gray-700 font-bold border-b border-gray-200">
-                            <th class="p-2">µ</th>
-                            <th class="p-2" id="thSideways"></th>
-                            <th class="p-2" id="thForward"></th>
-                            <th class="p-2" id="thBackward"></th>
-                        </tr>
-                    </thead>
+                    <thead id="modalTableHead"></thead>
                     <tbody id="modalTableBody" class="divide-y divide-gray-100 text-gray-600 font-mono"></tbody>
                 </table>
             </div>
@@ -177,9 +234,7 @@
     </div>
 
     <script>
-        let currentLang = 'sv';
-        let langData = {};
-        let fullData = {};
+        let currentLang = 'sv', langData = {}, fullData = {}, cachedTableData = null; 
 
         const lashingTypeSelect = document.getElementById('lashingTypeSelect');
         const hazardCheckbox = document.getElementById('hazardCheckbox');
@@ -188,6 +243,7 @@
         const angleRangeSelect = document.getElementById('angleRangeSelect');
         const lcFieldDiv = document.getElementById('lcFieldDiv');
         const stfFieldDiv = document.getElementById('stfFieldDiv');
+        const dimensionsDiv = document.getElementById('dimensionsDiv');
         const trailerSelect = document.getElementById('trailerSelect');
         const cargoSelect = document.getElementById('cargoSelect');
         const weightInput = document.getElementById('weightInput');
@@ -196,153 +252,187 @@
         const explanationText = document.getElementById('explanationText');
         const physicsDiagram = document.getElementById('physicsDiagram');
         const diagWeight = document.getElementById('diagWeight');
+        const riskExplanationBox = document.getElementById('riskExplanationBox');
+        const methodSuggestionBox = document.getElementById('methodSuggestionBox');
 
-        const tableModal = document.getElementById('tableModal');
-        const openModalBtn = document.getElementById('openModalBtn');
-        const closeModalBtn = document.getElementById('closeModalBtn');
-        const modalTableBody = document.getElementById('modalTableBody');
+        const tabCapBtn = document.getElementById('tabCapBtn'), tabDiagBtn = document.getElementById('tabDiagBtn'), tabCalcBtn = document.getElementById('tabCalcBtn');
+        const paneCap = document.getElementById('paneCap'), paneDiag = document.getElementById('paneDiag'), paneCalc = document.getElementById('paneCalc');
 
-        const langSvBtn = document.getElementById('langSvBtn');
-        const langEnBtn = document.getElementById('langEnBtn');
+        const tableModal = document.getElementById('tableModal'), openModalBtn = document.getElementById('openModalBtn'), closeModalBtn = document.getElementById('closeModalBtn');
+        const modalTableBody = document.getElementById('modalTableBody'), modalTableTypeSelect = document.getElementById('modalTableTypeSelect'), modalTableHead = document.getElementById('modalTableHead');
+        const langSvBtn = document.getElementById('langSvBtn'), langEnBtn = document.getElementById('langEnBtn');
+
+        function switchTab(activeBtn, activePane) {
+            [tabCapBtn, tabDiagBtn, tabCalcBtn].forEach(btn => btn.className = "flex-1 py-2 rounded-lg text-blue-700 hover:text-blue-900 transition");
+            activeBtn.className = "flex-1 py-2 rounded-lg bg-white text-blue-900 shadow-sm transition";
+            [paneCap, paneDiag, paneCalc].forEach(pane => pane.classList.add('hidden'));
+            activePane.classList.remove('hidden');
+        }
+
+        tabCapBtn.addEventListener('click', () => switchTab(tabCapBtn, paneCap));
+        tabDiagBtn.addEventListener('click', () => switchTab(tabDiagBtn, paneDiag));
+        tabCalcBtn.addEventListener('click', () => switchTab(tabCalcBtn, paneCalc));
+
+        function updateTrailerDropdown() {
+            if (!fullData || Object.keys(fullData).length === 0) return;
+            const currentTrailerVal = trailerSelect.value;
+            const currentCargoVal = cargoSelect.value; 
+            
+            trailerSelect.innerHTML = `<option value="">${langData.optSelectTrailer}</option>`;
+            Object.keys(fullData).forEach(key => {
+                const opt = document.createElement('option');
+                opt.value = key;
+                opt.textContent = currentLang === 'sv' ? key : fullData[key].en;
+                trailerSelect.appendChild(opt);
+            });
+            trailerSelect.value = currentTrailerVal;
+            updateCargoDropdown(currentCargoVal);
+        }
+
+        function updateCargoDropdown(preferredValue = "") {
+            cargoSelect.innerHTML = `<option value="">${langData.optSelectCargo}</option>`;
+            const selectedTrailer = trailerSelect.value;
+            
+            if (selectedTrailer && fullData[selectedTrailer]) {
+                cargoSelect.disabled = false;
+                fullData[selectedTrailer].items.forEach(cargo => {
+                    const opt = document.createElement('option');
+                    opt.value = cargo.mu;
+                    const cargoName = currentLang === 'sv' ? cargo.name_sv : cargo.name_en;
+                    opt.textContent = `${cargoName} (µ = ${cargo.mu})`;
+                    cargoSelect.appendChild(opt);
+                });
+                if (preferredValue) cargoSelect.value = preferredValue;
+            } else {
+                cargoSelect.disabled = true;
+            }
+        }
 
         async function loadLanguage(lang) {
             currentLang = lang;
             const res = await fetch(`/lang_${lang}.json`);
             langData = await res.json();
 
-            if (lang === 'sv') {
-                langSvBtn.className = "px-1.5 py-0.5 rounded font-bold bg-white shadow-sm";
-                langEnBtn.className = "px-1.5 py-0.5 rounded font-bold text-gray-400";
-            } else {
-                langEnBtn.className = "px-1.5 py-0.5 rounded font-bold bg-white shadow-sm";
-                langSvBtn.className = "px-1.5 py-0.5 rounded font-bold text-gray-400";
-            }
+            langSvBtn.className = lang === 'sv' ? "px-2.5 py-1 rounded font-bold bg-white shadow-sm" : "px-2.5 py-1 rounded font-bold text-gray-400";
+            langEnBtn.className = lang === 'en' ? "px-2.5 py-1 rounded font-bold bg-white shadow-sm" : "px-2.5 py-1 rounded font-bold text-gray-400";
 
             Object.keys(langData).forEach(key => {
                 const el = document.getElementById(key);
                 if (el) el.textContent = langData[key];
             });
-            
-            modalTableBody.innerHTML = "";
-            if (!resultDiv.classList.contains('hidden')) {
-                calcForm.dispatchEvent(new Event('submit'));
-            }
+            if (Object.keys(fullData).length > 0) updateTrailerDropdown();
+            if (!resultDiv.classList.contains('hidden')) calcForm.dispatchEvent(new Event('submit'));
         }
 
         langSvBtn.addEventListener('click', () => loadLanguage('sv'));
         langEnBtn.addEventListener('click', () => loadLanguage('en'));
 
-        openModalBtn.addEventListener('click', async () => {
-            tableModal.classList.remove('hidden');
-            if (modalTableBody.children.length === 0) {
-                const res = await fetch('/api/lashing-table');
-                const tableRows = await res.json();
-                
-                tableRows.forEach(row => {
-                    const tr = document.createElement('tr');
-                    const isNoSlip = row.sideways === 'ej glid';
-                    if (isNoSlip) tr.className = 'bg-green-50/50';
-                    
-                    const sideText = isNoSlip ? langData.noGlidTable : row.sideways;
-                    const backText = row.backward === 'ej glid' ? langData.noGlidTable : row.backward;
+        function renderModalTable(type) {
+            if (!cachedTableData) return;
+            modalTableHead.innerHTML = ""; modalTableBody.innerHTML = "";
+            const lblSide = langData.thSideways || "Sidled", lblFore = langData.thForward || "Framåt", lblBack = langData.thBackward || "Bakåt", unitText = currentLang === 'sv' ? 'Rad' : 'Row';
 
-                    tr.innerHTML = `
-                        <td class="p-2 font-bold bg-gray-50 text-gray-700">${row.mu.toFixed(2).replace('.', ',')}</td>
-                        <td class="p-2 ${isNoSlip ? 'text-green-700 font-semibold' : ''}">${sideText}</td>
-                        <td class="p-2 text-red-600 font-semibold">${row.forward}</td>
-                        <td class="p-2 ${row.backward === 'ej glid' ? 'text-green-700 font-semibold' : ''}">${backText}</td>
-                    `;
+            if (type === 'sliding') {
+                modalTableHead.innerHTML = `<tr class="bg-gray-100 text-gray-700 font-bold border-b border-gray-200"><th class="p-2">µ</th><th class="p-2">${lblSide}</th><th class="p-2">${lblFore}</th><th class="p-2">${lblBack}</th></tr>`;
+                cachedTableData.sliding.forEach(row => {
+                    const tr = document.createElement('tr'); const isNoSlip = row.sideways === 'ej glid';
+                    if (isNoSlip) tr.className = 'bg-green-50/50';
+                    tr.innerHTML = `<td class="p-2 font-bold bg-gray-50 text-gray-700">${row.mu.toFixed(2).replace('.', ',')}</td><td class="p-2 ${isNoSlip ? 'text-green-700 font-semibold' : ''}">${isNoSlip ? (langData.noGlidTable || 'ej glid') : row.sideways}</td><td class="p-2 text-red-600 font-semibold">${row.forward}</td><td class="p-2 ${row.backward === 'ej glid' ? 'text-green-700 font-semibold' : ''}">${row.backward === 'ej glid' ? (langData.noGlidTable || 'ej glid') : row.backward}</td>`;
+                    modalTableBody.appendChild(tr);
+                });
+            } else if (type === 'tippingSideways') {
+                modalTableHead.innerHTML = `<tr class="bg-gray-100 text-gray-700 font-bold border-b border-gray-200"><th class="p-2">${currentLang === 'sv' ? 'Kvot H/B' : 'Ratio H/W'}</th><th class="p-2">1 ${unitText}</th><th class="p-2">2 ${unitText}</th><th class="p-2">3 ${unitText}</th><th class="p-2">4 ${unitText}</th><th class="p-2">5 ${unitText}</th></tr>`;
+                Object.keys(cachedTableData.tippingSideways).map(Number).sort((a, b) => a - b).forEach(kvotNum => {
+                    const serverKey = kvotNum % 1 === 0 ? kvotNum.toString() : kvotNum.toFixed(1);
+                    const row = cachedTableData.tippingSideways[serverKey]; if (!row) return;
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `<td class="p-2 font-bold bg-gray-50 text-gray-700">${kvotNum.toFixed(1).replace('.', ',')}</td><td class="p-2">${row[1] === 'ej tipp' ? (langData.noTippingTable || 'ej tipp') : row[1]}</td><td class="p-2">${row[2] === 'ej tipp' ? (langData.noTippingTable || 'ej tipp') : row[2]}</td><td class="p-2">${row[3] === 'ej tipp' ? (langData.noTippingTable || 'ej tipp') : row[3]}</td><td class="p-2">${row[4] === 'ej tipp' ? (langData.noTippingTable || 'ej tipp') : row[4]}</td><td class="p-2">${row[5] === 'ej tipp' ? (langData.noTippingTable || 'ej tipp') : row[5]}</td>`;
+                    modalTableBody.appendChild(tr);
+                });
+            } else if (type === 'tippingForwardBackward') {
+                modalTableHead.innerHTML = `<tr class="bg-gray-100 text-gray-700 font-bold border-b border-gray-200"><th class="p-2">${currentLang === 'sv' ? 'Kvot H/L' : 'Ratio H/L'}</th><th class="p-2">${lblFore}</th><th class="p-2">${lblBack}</th></tr>`;
+                Object.keys(cachedTableData.tippingForwardBackward).map(Number).sort((a, b) => a - b).forEach(kvotNum => {
+                    const serverKey = kvotNum % 1 === 0 ? kvotNum.toString() : kvotNum.toFixed(1);
+                    const row = cachedTableData.tippingForwardBackward[serverKey]; if (!row) return;
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `<td class="p-2 font-bold bg-gray-50 text-gray-700">${kvotNum.toFixed(1).replace('.', ',')}</td><td class="p-2 text-red-600">${row.forward === 'ej tipp' ? (langData.noTippingTable || 'ej tipp') : row.forward}</td><td class="p-2 text-blue-600">${row.backward === 'ej tipp' ? (langData.noTippingTable || 'ej tipp') : row.backward}</td>`;
                     modalTableBody.appendChild(tr);
                 });
             }
+        }
+
+        openModalBtn.addEventListener('click', async () => {
+            tableModal.classList.remove('hidden');
+            if (!cachedTableData) {
+                const res = await fetch('/api/lashing-table');
+                cachedTableData = await res.json();
+                modalTableTypeSelect.value = "sliding"; 
+            }
+            renderModalTable(modalTableTypeSelect.value);
         });
 
+        modalTableTypeSelect.addEventListener('change', (e) => renderModalTable(e.target.value));
         closeModalBtn.addEventListener('click', () => tableModal.classList.add('hidden'));
         tableModal.addEventListener('click', (e) => { if(e.target === tableModal) tableModal.classList.add('hidden'); });
 
         async function loadOptions() {
             const res = await fetch('/api/options');
             fullData = await res.json();
-            Object.keys(fullData).forEach(trailer => {
-                const opt = document.createElement('option');
-                opt.value = trailer;
-                opt.textContent = trailer;
-                trailerSelect.appendChild(opt);
-            });
+            updateTrailerDropdown();
         }
 
         lashingTypeSelect.addEventListener('change', () => {
-            if (lashingTypeSelect.value === 'direct') {
-                stfInput.disabled = true;
-                stfFieldDiv.classList.add('opacity-40');
-                angleRangeSelect.disabled = false;
-                lcInput.disabled = false;
-                lcFieldDiv.classList.remove('opacity-40');
-            } else {
-                stfInput.disabled = false;
-                stfFieldDiv.classList.remove('opacity-40');
-                angleRangeSelect.disabled = false;
-                lcInput.disabled = false;
-            }
+            const isDirect = lashingTypeSelect.value === 'direct';
+            stfInput.disabled = isDirect;
+            stfFieldDiv.classList.toggle('opacity-40', isDirect);
+            dimensionsDiv.classList.toggle('hidden', isDirect);
         });
 
-        trailerSelect.addEventListener('change', () => {
-            cargoSelect.innerHTML = `<option value="">${langData.optSelectCargo}</option>`;
-            const selectedTrailer = trailerSelect.value;
-            if (selectedTrailer && fullData[selectedTrailer]) {
-                cargoSelect.disabled = false;
-                fullData[selectedTrailer].forEach(cargo => {
-                    const opt = document.createElement('option');
-                    opt.value = cargo.mu;
-                    opt.textContent = `${cargo.name} (µ = ${cargo.mu})`;
-                    cargoSelect.appendChild(opt);
-                });
-            } else {
-                cargoSelect.disabled = true;
-            }
-        });
+        trailerSelect.addEventListener('change', () => updateCargoDropdown());
 
         hazardCheckbox.addEventListener('change', () => {
-            if (hazardCheckbox.checked) {
-                trailerSelect.disabled = true;
-                cargoSelect.disabled = true;
-                trailerSelect.required = false;
-                cargoSelect.required = false;
-                trailerSelect.value = "";
-                cargoSelect.innerHTML = `<option value="">${langData.optSelectCargo}</option>`;
-            } else {
-                trailerSelect.disabled = false;
-                trailerSelect.required = true;
-                cargoSelect.required = true;
+            const isChecked = hazardCheckbox.checked;
+            trailerSelect.disabled = isChecked; cargoSelect.disabled = isChecked;
+            trailerSelect.required = !isChecked; cargoSelect.required = !isChecked;
+            if (isChecked) {
+                trailerSelect.value = ""; cargoSelect.innerHTML = `<option value="">${langData.optSelectCargo}</option>`;
             }
         });
 
         calcForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
             const lashingType = lashingTypeSelect.value;
             const mu = hazardCheckbox.checked ? 0.2 : parseFloat(cargoSelect.value);
-            const weightInKg = parseFloat(weightInput.value);
-            const weightInTons = weightInKg / 1000;
-            const stf = parseInt(stfInput.value);
-            const lc = parseInt(lcInput.value);
-            const angleRange = angleRangeSelect.value;
+            
+            if (!hazardCheckbox.checked && (isNaN(mu) || mu === null || cargoSelect.value === "")) return; 
+
+            const weightInKg = parseFloat(weightInput.value), weightInTons = weightInKg / 1000;
+            const stf = parseInt(stfInput.value), lc = parseInt(lcInput.value), angleRange = angleRangeSelect.value;
+            const h = parseFloat(document.getElementById('heightInput').value);
+            const w = parseFloat(document.getElementById('widthInput').value);
+            const l = parseFloat(document.getElementById('lengthInput').value);
+            const r = parseInt(document.getElementById('rowsSelect').value || 1);
+
+            let bodyPayload = { lashingType, mu, weight: weightInTons, stf, lc, angleRange };
+            if (lashingType === 'topOver' && !isNaN(h) && !isNaN(w) && !isNaN(l)) {
+                bodyPayload.height = h; bodyPayload.width = w; bodyPayload.length = l; bodyPayload.rows = r;
+            }
 
             const response = await fetch('/api/calculate', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ lashingType, mu, weight: weightInTons, stf, lc, angleRange })
+                body: JSON.stringify(bodyPayload)
             });
-
             const result = await response.json();
-            
-            if (result.error) {
-                alert(result.error);
-                return;
-            }
+            if (result.error) { alert(result.error); return; }
 
-            const typeText = lashingType === 'direct' ? langData.directType : langData.topOverType;
-            document.getElementById('resTypeHeader').textContent = `${langData.resTypeHeader} (${typeText})`;
+            const cargoBox = document.getElementById('diagramCargoBox');
+            const geoTopOverLabel = document.getElementById('geoTopOverLabel');
+            const geoDirectLabel = document.getElementById('geoDirectLabel');
+            const svgTopOverGroup = document.getElementById('svgTopOverGroup');
+            const svgDirectGroup = document.getElementById('svgDirectGroup');
+
+            document.getElementById('resTypeHeader').textContent = `${langData.resTypeHeader} (${lashingType === 'direct' ? langData.directType : langData.topOverType})`;
             document.getElementById('resMu').textContent = result.mu;
             document.getElementById('resFactor').textContent = result.factor;
 
@@ -352,82 +442,68 @@
                 return `${val} ${langData.tonPerStrap}`;
             };
 
-            document.getElementById('resSideways').textContent = formatCapText(result.calculatedSideways);
-            document.getElementById('resForward').textContent = formatCapText(result.calculatedForward);
-            document.getElementById('resBackward').textContent = formatCapText(result.calculatedBackward);
-            
-            let lashingSuffix = lashingType === 'direct' ? langData.strapsinPairs : '';
-            document.getElementById('resTotalBox').innerHTML = langData.recText.replace('{total}', `<span class="text-xl">${result.total}</span>`) + lashingSuffix;
-            
-            if (lashingType === 'topOver') {
-                diagWeight.textContent = `${weightInKg} kg`;
-                physicsDiagram.classList.remove('hidden');
-            } else {
-                physicsDiagram.classList.add('hidden');
-            }
-
-            const cleanBaseValueForward = parseFloat(result.rawForward);
-            
-            if (lashingType === 'direct') {
-                const capStrap = angleRange === 'flat' ? (lc * 0.5 / 1000).toFixed(2) : (lc * 0.7 / 1000).toFixed(2);
-                explanationText.innerHTML = `
-                    <div class="space-y-3">
-                        <p class="font-semibold text-gray-800">${langData.expDirectTitle}</p>
-                        <div class="bg-gray-50 p-2 rounded border border-gray-100 font-mono space-y-1 text-[11px]">
-                            <p>• ${langData.diagLoadText} ${weightInKg} kg (${weightInTons.toFixed(2)} t)</p>
-                            <p>• µ: ${mu}</p>
-                            <p>• LC: ${lc} daN</p>
-                        </div>
-                        <ol class="list-decimal pl-4 space-y-2">
-                            <li>${langData.expDirectStep1.replace('{muPercent}', (mu*100).toFixed(0)).replace('{remPercent}', ((0.8 - mu)*100).toFixed(0))}</li>
-                            <li>${langData.expDirectStep2.replace('{angle}', angleRange === 'flat' ? '30°-75°' : '75°-90°').replace('{capStrap}', capStrap)}</li>
-                            <li>${langData.expDirectStep3}</li>
-                        </ol>
-                    </div>`;
-            } else {
-                const remPercent = Math.round((0.8 - mu) * 100);
-                const remDecimal = (0.8 - mu).toFixed(2);
-                const remForceKg = Math.round(weightInKg * (0.8 - mu));
-                const baseValKg = Math.round(cleanBaseValueForward * 1000);
+            if (result.lashingType === 'topOver' && result.isTippingCalculated) {
+                riskExplanationBox.classList.remove('hidden');
+                const maxSliding = Math.max(result.sliding.sideways, result.sliding.forward, result.sliding.backward);
+                const maxTipping = Math.max(result.tipping.sideways, result.tipping.forward, result.tipping.backward);
                 
-                // Räkna ut vad spännbandet blir UTAN vinkelhalvering för textstegen
-                const stfOnlyFactor = (stf / 400).toFixed(2);
-                const trueCap = (cleanBaseValueForward * parseFloat(result.factor)).toFixed(2);
-                const trueCapKg = Math.round(trueCap * 1000);
-                const exactStraps = (weightInTons / trueCap).toFixed(2);
-
-                // Språkvänliga parametrar för vinkelavdraget
-                let angleRangeText, angleExplText, angleMath, mathStraps;
-                if (currentLang === 'sv') {
-                    angleRangeText = angleRange === 'flat' ? "Flack vinkel (30°-75°)" : "Brant vinkel (75°-90°)";
-                    angleExplText = angleRange === 'flat' ? "Eftersom vinkeln är flack halverar TYA-regeln spännbandets bromseffekt (×0.50)." : "Eftersom vinkeln är brant får du ut full spänneffekt (1.00x).";
-                    angleMath = angleRange === 'flat' ? "× 0.50" : "";
-                    mathStraps = `${exactStraps} st`;
+                if (maxTipping > maxSliding) {
+                    riskExplanationBox.innerHTML = langData.resTippingDominates.replace('{maxTipping}', maxTipping).replace('{maxSliding}', maxSliding);
+                    methodSuggestionBox.classList.remove('hidden');
+                    document.getElementById('lblTippingWarningTitle').textContent = langData.lblTippingWarningTitle;
+                    document.getElementById('lblTippingWarningDesc').innerHTML = langData.lblTippingWarningDesc;
+                    if (cargoBox) cargoBox.className = "w-28 h-16 bg-red-600/10 border-2 border-red-600 rounded flex flex-col items-center justify-center p-1 shadow-sm rotate-3 transition-all duration-300 z-10";
                 } else {
-                    angleRangeText = angleRange === 'flat' ? "Flat angle (30°-75°)" : "Steep angle (75°-90°)";
-                    angleExplText = angleRange === 'flat' ? "Due to the shallow geometry, the standard cuts your strap's active friction efficiency in half (×0.50)." : "Since the angle is steep, the strap maintains full friction potential (1.00x).";
-                    angleMath = angleRange === 'flat' ? "× 0.50" : "";
-                    mathStraps = `${exactStraps} pcs`;
+                    riskExplanationBox.innerHTML = langData.resSlidingDominates; methodSuggestionBox.classList.add('hidden');
+                    if (cargoBox) cargoBox.className = "w-28 h-16 bg-amber-600/10 border-2 border-amber-700 rounded flex flex-col items-center justify-center p-1 shadow-sm transition-all duration-300 z-10";
                 }
+                
+                const sideDisplay = Math.max(result.sliding.sideways, result.tipping.sideways);
+                const foreDisplay = Math.max(result.sliding.forward, result.tipping.forward);
+                const backDisplay = Math.max(result.sliding.backward, result.tipping.backward);
+                const unitSuffix = currentLang === 'sv' ? 'st' : 'pcs';
 
-                explanationText.innerHTML = `
-                    <div class="space-y-3">
-                        <p class="font-semibold text-gray-800">${langData.expTopOverTitle.replace('{total}', result.total).replace('{weightKg}', weightInKg)}</p>
-                        <ol class="list-decimal pl-4 space-y-2">
-                            <li>${langData.expTopOverStep1.replace('{muPercent}', (mu*100).toFixed(0)).replace('{remPercent}', remPercent).replace('{weightKg}', weightInKg).replace('{remDecimal}', remDecimal).replace('{remForceKg}', remForceKg)}</li>
-                            <li>${langData.expTopOverStep2.replace('{mu}', mu).replace(/{baseVal}/g, cleanBaseValueForward.toFixed(2)).replace('{baseValKg}', baseValKg)}</li>
-                            <li>${langData.expTopOverStep3.replace(/{stf}/g, stf).replace('{factor}', stfOnlyFactor)}</li>
-                            <li>${langData.expTopOverStep4.replace('{angleRangeText}', angleRangeText).replace('{angleExplText}', angleExplText).replace(/{baseVal}/g, cleanBaseValueForward.toFixed(2)).replace('{factor}', stfOnlyFactor).replace('{angleMath}', angleMath).replace(/{trueCap}/g, trueCap).replace('{trueCapKg}', trueCapKg)}</li>
-                            <li>${langData.expTopOverStep5.replace(/{weightTons}/g, weightInTons.toFixed(2)).replace(/{trueCap}/g, trueCap).replace('{exactStraps}', exactStraps).replace(/{total}/g, result.total).replace(/{remForceKg}/g, remForceKg).replace(/{trueCapKg}/g, trueCapKg).replace('{mathStraps}', mathStraps)}</li>
-                        </ol>
-                    </div>`;
+                document.getElementById('resSideways').textContent = `${sideDisplay} ${unitSuffix}${result.tipping.sideways > result.sliding.sideways ? ` (${langData.lblTipping || 'tipp'})` : ''}`;
+                document.getElementById('resForward').textContent = `${foreDisplay} ${unitSuffix}${result.tipping.forward > result.sliding.forward ? ` (${langData.lblTipping || 'tipp'})` : ''}`;
+                document.getElementById('resBackward').textContent = `${backDisplay} ${unitSuffix}${result.tipping.backward > result.sliding.backward ? ` (${langData.lblTipping || 'tipp'})` : ''}`;
+            } else {
+                riskExplanationBox.classList.add('hidden'); methodSuggestionBox.classList.add('hidden');
+                if (cargoBox) cargoBox.className = "w-28 h-16 bg-amber-600/10 border-2 border-amber-700 rounded flex flex-col items-center justify-center p-1 shadow-sm transition-all duration-300 z-10";
+                document.getElementById('resSideways').textContent = formatCapText(result.calculatedSideways);
+                document.getElementById('resForward').textContent = formatCapText(result.calculatedForward);
+                document.getElementById('resBackward').textContent = formatCapText(result.calculatedBackward);
             }
             
-            resultDiv.classList.remove('hidden');
+            document.getElementById('resTotalBox').innerHTML = langData.recText.replace('{total}', `<span class="text-xl">${result.total}</span>`) + (lashingType === 'direct' ? langData.strapsinPairs : '');
+            
+            // Konfigurera och rita upp rätt skiss i diagramfliken
+            diagWeight.textContent = `${weightInKg} kg`;
+            document.getElementById('diagLoadText').textContent = langData.diagLoadText || "Last:";
+            document.getElementById('diagReqText').textContent = langData.diagReqText || "Krav";
+            document.getElementById('diagFricText').textContent = `${langData.diagFricText || "Friktion"} (µ=${result.mu})`;
+
+            // DYNAMISK VÄXLING AV SVG-BLOCK: Tänder rätt bandmönster baserat på vald radiotyp
+            if (lashingType === 'direct') {
+                geoTopOverLabel.classList.add('hidden'); svgTopOverGroup.classList.add('hidden');
+                geoDirectLabel.classList.remove('hidden'); svgDirectGroup.classList.remove('hidden');
+            } else {
+                geoDirectLabel.classList.add('hidden'); svgDirectGroup.classList.add('hidden');
+                geoTopOverLabel.classList.remove('hidden'); svgTopOverGroup.classList.remove('hidden');
+            }
+
+            if (lashingType === 'direct') {
+                explanationText.innerHTML = `<div class="space-y-3"><p class="font-semibold text-gray-800">${langData.expDirectTitle}</p><div class="bg-gray-50 p-2 rounded border border-gray-100 font-mono space-y-1 text-[11px]"><p>• ${langData.diagLoadText} ${weightInKg} kg</p><p>• µ: ${mu}</p><p>• LC: ${lc} daN</p></div><ol class="list-decimal pl-4 space-y-2"><li>${langData.expDirectStep1.replace('{muPercent}', (mu*100).toFixed(0)).replace('{remPercent}', ((0.8 - mu)*100).toFixed(0))}</li><li>${langData.expDirectStep2.replace('{angle}', angleRange === 'flat' ? '30°-75°' : '75°-90°').replace('{capStrap}', angleRange === 'flat' ? (lc * 0.5 / 1000).toFixed(2) : (lc * 0.7 / 1000).toFixed(2))}</li><li>${langData.expDirectStep3}</li></ol></div>`;
+            } else {
+                const cleanBaseValueForward = parseFloat(result.rawForward || 0.81);
+                explanationText.innerHTML = `<div class="space-y-3"><p class="font-semibold text-gray-800">${langData.expTopOverTitle.replace('{total}', result.total).replace('{weightKg}', weightInKg)}</p><ol class="list-decimal pl-4 space-y-2"><li>${langData.expTopOverStep1.replace('{muPercent}', (mu*100).toFixed(0)).replace('{remPercent}', Math.round((0.8 - mu) * 100)).replace('{weightKg}', weightInKg).replace('{remDecimal}', (0.8 - mu).toFixed(2)).replace('{remForceKg}', Math.round(weightInKg * (0.8 - mu)))}</li><li>${langData.expTopOverStep2.replace('{mu}', mu).replace(/{baseVal}/g, cleanBaseValueForward.toFixed(2)).replace('{baseValKg}', Math.round(cleanBaseValueForward * 1000))}</li><li>${langData.expTopOverStep3.replace(/{stf}/g, stf).replace('{factor}', (stf / 400).toFixed(2))}</li><li>${langData.expTopOverStep4.replace('{angleRangeText}', angleRange === 'flat' ? "Flack" : "Brant").replace('{angleExplText}', "").replace(/{baseVal}/g, cleanBaseValueForward.toFixed(2)).replace('{factor}', (stf / 400).toFixed(2)).replace('{angleMath}', "").replace(/{trueCap}/g, (cleanBaseValueForward * parseFloat(result.factor)).toFixed(2)).replace('{trueCapKg}', Math.round(cleanBaseValueForward * parseFloat(result.factor) * 1000))}</li><li>${langData.expTopOverStep5.replace(/{weightTons}/g, weightInTons.toFixed(2)).replace(/{trueCap}/g, (cleanBaseValueForward * parseFloat(result.factor)).toFixed(2)).replace('{exactStraps}', (weightInTons / (cleanBaseValueForward * parseFloat(result.factor))).toFixed(2)).replace(/{total}/g, result.total).replace(/{remForceKg}/g, Math.round(weightInKg * (0.8 - mu))).replace(/{trueCapKg}/g, Math.round(cleanBaseValueForward * parseFloat(result.factor) * 1000)).replace('{mathStraps}', "")}</li></ol></div>`;
+            }
+            
+            switchTab(tabCapBtn, paneCap);
+            physicsDiagram.classList.remove('hidden'); resultDiv.classList.remove('hidden');
+            resultDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
 
-        loadLanguage('sv');
-        loadOptions();
+        loadLanguage('sv'); loadOptions();
     </script>
 </body>
 </html>

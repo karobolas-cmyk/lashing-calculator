@@ -41,7 +41,14 @@
   "topOverType": "Överfallssurrning",
   "directType": "Direktsurrning / Diagonalsurrning",
   "noGlidTable": "ej glid",
+  "noTippingTable": "ej tipp",
   "recText": "REKOMMENDATION: Minst {total} st band",
+  "lblTipping": "tipp",
+  "optRiskSliding": "Risken att lasten glider",
+  "optRiskTippingSideways": "Risken att lasten tippar i sidled",
+  "optRiskTippingLong": "Risken att lasten tippar framåt eller bakåt",
+  "resTippingDominates": "⚠️ <strong>Tipprisk dominerar:</strong> Lastens geometri gör att risken för stjälpning/tippning kräver fler spännband än glidningsfriktionen ({maxTipping} st mot {maxSliding} st).",
+  "resSlidingDominates": "✅ <strong>Glidrisk dominerar:</strong> Friktionen är den avgörande komponenten. Risken att godset kan glida kräver fler spännband än dimensionernas tipprisk.",
   "expDirectTitle": "Direktsurrning baseras på mekanisk hållfasthet (LC) och vinklar:",
   "expDirectStep1": "<strong>Rörelsekrav minus friktion:</strong> Kraven enligt standard är 80% framåt, 50% bakåt/sidled. Återstående kraft efter friktionsavdrag:<br><span class='font-mono text-blue-700 block mt-1'>Framåt: 80% - {muPercent}% = {remPercent}% av vikten</span>",
   "expDirectStep2": "<strong>Vinkelförlust:</strong> Beräknat med standardgeometri utifrån vald vinkeltyp:<br><span class='font-mono text-blue-700 block mt-1'>Verksam styrka per band: ca {capStrap} ton</span>",
@@ -51,5 +58,7 @@
   "expTopOverStep2": "<strong>Kopplingen till TYA-tabellen:</strong> Branschens källtabell utgår från ett standardband (Stf = 400 daN) draget i brant vinkel. Vid friktionen <span class='font-semibold'>µ = {mu}</span> ger det en bas-kapacitet framåt på:<br><span class='font-mono text-blue-700 block mt-1'>Framåt-kapacitet (Bas): {baseVal} ton ({baseValKg} kg) / band</span>",
   "expTopOverStep3": "<strong>Justering för din märkning (Stf):</strong> Med ditt insatta värde på {stf} daN blir spännbandets grundeffekt:<br><span class='font-mono text-blue-700 block mt-1'>{stf} daN ÷ 400 daN = {factor}x effekt per band</span>",
   "expTopOverStep4": "<strong>Vinkelkontroll enligt TYA-regeln:</strong> Du har valt <em>{angleRangeText}</em>. {angleExplText}<br><span class='font-mono text-green-700 font-bold block mt-1'>Reell kapacitet per band framåt = {baseVal} ton × {factor} {angleMath} = {trueCap} ton ({trueCapKg} kg)</span>",
-  "expTopOverStep5": "<strong>Slutlig beräkning & branschnorm:</strong> Restbehovet delat på ditt bands reella styrka (<span class='font-mono'>{remForceKg} kg ÷ {trueCapKg} kg/band = {exactStraps} band</span>) kräver rent matematiskt {mathStraps} band. Men enligt TYA:s branschnorm ska fristående gods säkras med <span class='font-semibold'>minst 2 st band</span> för att garantera stabilitet!"
+  "expTopOverStep5": "<strong>Slutlig beräkning & branschnorm:</strong> Restbehovet delat på ditt bands reella styrka (<span class='font-mono'>{remForceKg} kg ÷ {trueCapKg} kg/band = {exactStraps} band</span>) kräver rent matematiskt {mathStraps} band. Men enligt TYA:s branschnorm ska fristående gods säkras med <span class='font-semibold'>minst 2 st band</span> för att garantera stabilitet!",
+  "lblTippingWarningTitle": "💡 Smart surrningstips vid stjälpningsrisk:",
+  "lblTippingWarningDesc": "Eftersom lastsäkringen styrs av tipprisk istället för glidrisk, är vanliga överfallssurrningar ineffektiva. Överväg att använda en <strong>grimma</strong> runt toppen av godset, förstänga framåt, eller använda <strong>direktsurrning</strong> för att drastiskt minska antalet spännband och öka stabiliteten."
 }
