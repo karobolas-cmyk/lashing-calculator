@@ -5,7 +5,7 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.static('public'));
 
-// Complete Friction Coefficient Matrix (mu) - Restored, Upgraded & Fully Bilingual
+// Complete Friction Coefficient Matrix (mu) - Fully Bilingual
 const frictionData = {
     "Formplywood / Slitdurk (Standard släpvagnsbotten)": {
         en: "Trailer Plywood / Anti-slip Deck (Standard Bed)",
@@ -183,7 +183,6 @@ app.post('/api/calculate', (req, res) => {
                     return Math.ceil(weight / (baseTipCap * totalFactor));
                 };
 
-                // Säkring mot extrema kvoter utanför TYA-tabellens tak (> 3.2)
                 if (hbRatio > 3.2) {
                     tippingSideways = Math.max(4, Math.ceil(weight / 0.15)); 
                 } else {

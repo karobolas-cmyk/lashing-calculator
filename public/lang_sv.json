@@ -60,5 +60,17 @@
   "expTopOverStep4": "<strong>Vinkelkontroll enligt TYA-regeln:</strong> Du har valt <em>{angleRangeText}</em>. {angleExplText}<br><span class='font-mono text-green-700 font-bold block mt-1'>Reell kapacitet per band framåt = {baseVal} ton × {factor} {angleMath} = {trueCap} ton ({trueCapKg} kg)</span>",
   "expTopOverStep5": "<strong>Slutlig beräkning & branschnorm:</strong> Restbehovet delat på ditt bands reella styrka (<span class='font-mono'>{remForceKg} kg ÷ {trueCapKg} kg/band = {exactStraps} band</span>) kräver rent matematiskt {mathStraps} band. Men enligt TYA:s branschnorm ska fristående gods säkras med <span class='font-semibold'>minst 2 st band</span> för att garantera stabilitet!",
   "lblTippingWarningTitle": "💡 Smart surrningstips vid stjälpningsrisk:",
-  "lblTippingWarningDesc": "Eftersom lastsäkringen styrs av tipprisk istället för glidrisk, är vanliga överfallssurrningar ineffektiva. Överväg att använda en <strong>grimma</strong> runt toppen av godset, förstänga framåt, eller använda <strong>direktsurrning</strong> för att drastiskt minska antalet spännband och öka stabiliteten."
+  "lblTippingWarningDesc": "Eftersom lastsäkringen styrs av tipprisk istället för glidrisk, är vanliga överfallssurrningar ineffektiva. Överväg att använda en <strong>grimma</strong> runt toppen av godset, förstänga framåt, eller använda <strong>direktsurrning</strong> för att drastiskt minska antalet spännband och öka stabiliteten.",
+  "lblHazardTipTitle": "💡 Tips: Snorhalt underlag!",
+  "lblBundlingTipTitle": "💡 Tips: Undvik dominorisk!",
+  "lblSteelTipTitle": "💡 Tips: Träpalls-tricket!",
+  "lblSteelTipDesc": "Stål mot stål eller stål mot släpvagnsbotten glider väldigt lätt. Sätt inte tunga maskindelar direkt på flaket. Ställ dem istället på en helt vanlig <strong>träpall</strong> eller lägg <strong>träreglar</strong> emellan. Genom att ändra kontaktytan till trä mot plywood höjer du friktionen till 0.45 direkt och slipper dra hälften av spännbanden!",
+  "lblSoftCargoTipTitle": "💡 Tips: Använd kantskydd!",
+  "lblSoftCargoTipDesc": "Du surrar gods som kan deformeras (kartong/plast). Om du drar åt bandet hårt kommer godset att tryckas ihop, vilket gör att spännbandet blir <strong>slappt och tappar all spänning</strong> efter bara några kilometer. Lägg <strong>kantskydd</strong> längs hela godsets ovankant för att fördela trycket!",
+  "lblBlockingTipTitle": "💡 Tips: Förstäng bort glidrisken!",
+  "lblBlockingTipDesc": "Godset är tungt men väldigt stabilt, så det kommer inte att välta. Det som kräver så många band är den stora glidkraften framåt vid en kraftig inbromsning.<br><br>👉 <strong>Förstäng godset framåt:</strong> Backa pallen direkt mot framstammen eller lägg tomma pallar som distans framåt. Blockeras rörelsen framåt mekaniskt kan du ofta halvera antalet överfallssurrningar!",
+  "lblRingsTipTitle": "💡 Tips: Kontrollera surrningsöglorna!",
+  "lblRingsTipDesc": "Du har valt en brant surrningsvinkel vilket ger maximal effekt nedåt. Men kom ihåg: när du drar åt spännbanden med full kraft över tungt gods, blir den sammanlagda <strong>vertikala dragkraften i flakets surrningsöglor enorm</strong>. Kontrollera att dina surrningsöglor i släpet är godkända för lastens tyngd!",
+  "lblStandardTipTitle": "💡 Tips: Standardförfarande",
+  "lblStandardTipDesc": "Eftersom godset är stabilt och glidrisken dominerar är överfallssurrning ett utmärkt val. Se bara till att placera spännbanden så nära 90° vinkel mot flaket som möjligt för maximal friktionseffekt!"
 }

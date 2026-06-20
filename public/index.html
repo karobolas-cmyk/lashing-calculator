@@ -45,16 +45,12 @@
                 
                 <div class="grid grid-cols-2 gap-3">
                     <div id="lcFieldDiv">
-                        <label class="block text-[11px] font-semibold text-gray-600 leading-tight mb-1">
-                            LC<br><span class="text-[10px] text-gray-400 font-normal">(Kapacitet, daN)</span>
-                        </label>
+                        <label class="block text-[11px] font-semibold text-gray-600 leading-tight mb-1" id="lblLc"></label>
                         <input type="number" id="lcInput" value="1600" min="1" class="w-full p-2 text-sm bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" required>
                     </div>
                     
                     <div id="stfFieldDiv">
-                        <label class="block text-[11px] font-semibold text-gray-600 leading-tight mb-1">
-                            STF<br><span class="text-[10px] text-gray-400 font-normal">(Försträckning, daN)</span>
-                        </label>
+                        <label class="block text-[11px] font-semibold text-gray-600 leading-tight mb-1" id="lblStf"></label>
                         <input type="number" id="stfInput" value="400" min="1" class="w-full p-2 text-sm bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" required>
                     </div>
                 </div>
@@ -137,6 +133,7 @@
                     <div class="border-t border-blue-200 my-2 pt-2"></div>
                     
                     <div id="riskExplanationBox" class="text-xs bg-white border border-blue-200 rounded-lg p-2 mb-3 text-blue-950 font-medium hidden"></div>
+                    
                     <div id="methodSuggestionBox" class="text-xs bg-amber-50 border border-amber-200 rounded-lg p-3 mb-3 text-amber-950 hidden">
                         <p class="font-bold text-amber-900 mb-1" id="lblTippingWarningTitle"></p>
                         <p id="lblTippingWarningDesc"></p>
@@ -152,7 +149,6 @@
 
             <div id="paneDiag" class="p-4 hidden">
                 <div id="physicsDiagram" class="w-full h-48 bg-slate-50 rounded-xl border border-slate-200 relative flex flex-col justify-between items-center p-3 overflow-hidden shadow-inner">
-                    
                     <div class="w-full flex justify-between items-start z-10">
                         <div class="flex items-center bg-white/90 px-2 py-0.5 rounded border border-red-200 shadow-sm">
                             <span class="text-[10px] text-red-600 font-extrabold mr-1.5" id="diagReqText">Krav</span>
@@ -160,7 +156,6 @@
                                 <div class="absolute top-1/2 right-0 -translate-y-1/2 w-0 h-0 border-t-[3px] border-t-transparent border-b-[3px] border-b-transparent border-l-[4px] border-l-red-600"></div>
                             </div>
                         </div>
-
                         <span id="geoTopOverLabel" class="text-[9px] text-blue-600 font-extrabold bg-blue-50 px-2 py-0.5 rounded border border-blue-200 shadow-sm hidden">Stf × 2</span>
                         <span id="geoDirectLabel" class="text-[9px] text-blue-600 font-extrabold bg-blue-50 px-2 py-0.5 rounded border border-blue-200 shadow-sm hidden">LC Kapacitet</span>
                     </div>
@@ -193,7 +188,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
 
@@ -207,11 +201,12 @@
         </div>
     </div>
 
+    <!-- MODAL FÖR KÄLLTABELL -->
     <div id="tableModal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-2 sm:p-4 hidden">
         <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg p-5 max-h-[90vh] flex flex-col">
             <div class="flex justify-between items-center mb-3 border-b pb-2">
                 <div>
-                    <h2 class="font-bold text-gray-800 text-base" id="modalTitle">Lathundstabeller (TYA)</h2>
+                    <h2 class="font-bold text-gray-800 text-base" id="modalTitle">Kapacitetstabell (EN 12195-1)</h2>
                     <p class="text-[11px] text-gray-500" id="modalSubTitle"></p>
                 </div>
                 <button id="closeModalBtn" type="button" class="text-gray-400 hover:text-gray-600 font-bold text-lg px-2">✕</button>
@@ -261,6 +256,79 @@
         const tableModal = document.getElementById('tableModal'), openModalBtn = document.getElementById('openModalBtn'), closeModalBtn = document.getElementById('closeModalBtn');
         const modalTableBody = document.getElementById('modalTableBody'), modalTableTypeSelect = document.getElementById('modalTableTypeSelect'), modalTableHead = document.getElementById('modalTableHead');
         const langSvBtn = document.getElementById('langSvBtn'), langEnBtn = document.getElementById('langEnBtn');
+
+        // ------------------------------------------------------------------------
+        // ADVANCED DRIVER TIPS MATRIX WITH RESULT INJECTION SUPPORT
+        // ------------------------------------------------------------------------
+        function getAdvancedDriverTip(lashingType, hbRatio, mu, weight, totalStraps, stf, trailerMat, cargoMat, result) {
+            const unitSuffix = currentLang === 'sv' ? 'st' : 'pcs';
+            const rowsSelect = document.getElementById('rowsSelect');
+            const activeRows = rowsSelect ? parseInt(rowsSelect.value || 1) : 1;
+            const angleRangeSelect = document.getElementById('angleRangeSelect');
+            const isFlatAngle = angleRangeSelect ? angleRangeSelect.value === "flat" : false;
+
+            if (mu <= 0.25) {
+                let totalFactor = stf / 400;
+                if (isFlatAngle) totalFactor = totalFactor * 0.5;
+                let strapsWithRubber = Math.ceil(weight / (1.9 * totalFactor));
+                if (strapsWithRubber < 2) strapsWithRubber = 2;
+
+                if (strapsWithRubber < totalStraps) {
+                    return {
+                        title: langData.lblHazardTipTitle || "💡 Tips: Snorhalt underlag!",
+                        desc: (currentLang === 'sv' 
+                            ? `Friktionen är extremt låg (µ = ${mu}). Att använda enbart överfallssurrning kräver hela <strong>${totalStraps} ${unitSuffix}</strong> band.<br><br>👉 <strong>Lägg en gummimatta (µ = 0.60) under pallen:</strong> Då ökar friktionen så pass mycket att du klarar dig på minsta tillåtna <strong>${strapsWithRubber} ${unitSuffix}</strong> band! Du sparar alltså ${totalStraps - strapsWithRubber} band.`
+                            : `The friction is extremely low (µ = ${mu}). Using only top-over lashing requires <strong>${totalStraps} ${unitSuffix}</strong> straps.<br><br>👉 <strong>Place a rubber mat (µ = 0.60) under the pallet:</strong> This increases friction so much that you only need the legal minimum of <strong>${strapsWithRubber} ${unitSuffix}</strong> straps! You save ${totalStraps - strapsWithRubber} straps.`)
+                    };
+                }
+            }
+
+            if (lashingType === 'topOver' && hbRatio > 1.5 && activeRows > 1) {
+                let strapsWithBundling = Math.max(2, result && result.sliding ? Math.max(result.sliding.sideways, result.sliding.forward, result.sliding.backward) : 2);
+                
+                if (strapsWithBundling < totalStraps) {
+                    return {
+                        title: langData.lblBundlingTipTitle || "💡 Tips: Undvik dominorisk!",
+                        desc: (currentLang === 'sv'
+                            ? `Att ställa höga, smala kollin i rader ökar stjälpningsrisken markant på grund av radstjälpning. Det är därför det krävs hela <strong>${totalStraps} ${unitSuffix}</strong> band just nu.<br><br>👉 <strong>Bunta ihop/surra samman kollina i sidled:</strong> Dra ett spännband runt om hela paketet innan du lägger överfallssurrningen. Då ändrar du fysiken till '1 rad', raderar ut dominorisken och klarar dig på bara <strong>${strapsWithBundling} ${unitSuffix}</strong> band istället för ${totalStraps}!`
+                            : `Placing tall, narrow cargo units in rows significantly increases the tipping risk due to the domino effect. This is why <strong>${totalStraps} ${unitSuffix}</strong> straps are required right now.<br><br>👉 <strong>Bundle the units together horizontally:</strong> Pull a strap around the entire package before applying the top-over lashings. This changes the physics to '1 row', eliminates the domino risk, and you will only need <strong>${strapsWithBundling} ${unitSuffix}</strong> straps instead of ${totalStraps}!`)
+                    };
+                }
+            }
+
+            if (cargoMat && (cargoMat.includes("Stålhäck") || cargoMat.includes("stålplåt") || cargoMat.includes("Steel"))) {
+                return {
+                    title: langData.lblSteelTipTitle || "💡 Tips: Träpalls-tricket!",
+                    desc: langData.lblSteelTipDesc || ""
+                };
+            }
+
+            if (cargoMat && (cargoMat.includes("Flyttlåda") || cargoMat.includes("Storsäck") || cargoMat.includes("Cardboard") || cargoMat.includes("bag"))) {
+                return {
+                    title: langData.lblSoftCargoTipTitle || "💡 Tips: Använd kantskydd!",
+                    desc: langData.lblSoftCargoTipDesc || ""
+                };
+            }
+
+            if (lashingType === 'topOver' && weight > 4.0 && hbRatio < 0.8 && totalStraps > 2) {
+                return {
+                    title: langData.lblBlockingTipTitle || "💡 Tips: Förstäng bort glidrisken!",
+                    desc: langData.lblBlockingTipDesc || ""
+                };
+            }
+
+            if (weight > 3.0 && !isFlatAngle && totalStraps >= 3) {
+                return {
+                    title: langData.lblRingsTipTitle || "💡 Tips: Kontrollera surrningsöglorna!",
+                    desc: langData.lblRingsTipDesc || ""
+                };
+            }
+
+            return {
+                title: langData.lblStandardTipTitle || "💡 Tips: Standardförfarande",
+                desc: langData.lblStandardTipDesc || ""
+            };
+        }
 
         function switchTab(activeBtn, activePane) {
             [tabCapBtn, tabDiagBtn, tabCalcBtn].forEach(btn => btn.className = "flex-1 py-2 rounded-lg text-blue-700 hover:text-blue-900 transition");
@@ -318,7 +386,7 @@
 
             Object.keys(langData).forEach(key => {
                 const el = document.getElementById(key);
-                if (el) el.textContent = langData[key];
+                if (el) el.innerHTML = langData[key];
             });
             if (Object.keys(fullData).length > 0) updateTrailerDropdown();
             if (!resultDiv.classList.contains('hidden')) calcForm.dispatchEvent(new Event('submit'));
@@ -442,19 +510,37 @@
                 return `${val} ${langData.tonPerStrap}`;
             };
 
+            const hbRatio = h / w;
+            const hlRatio = h / l;
+
+            const trailerSelectEl = document.getElementById('trailerSelect');
+            const cargoSelectEl = document.getElementById('cargoSelect');
+            const selectedTrailerText = trailerSelectEl.options[trailerSelectEl.selectedIndex]?.text || "";
+            const selectedCargoText = cargoSelectEl.options[cargoSelectEl.selectedIndex]?.text || "";
+
+            const driverTip = getAdvancedDriverTip(lashingType, hbRatio, mu, weightInTons, result.total, stf, selectedTrailerText, selectedCargoText, result);
+            const suggestionBox = document.getElementById('methodSuggestionBox');
+            if (suggestionBox) {
+                suggestionBox.classList.remove('hidden');
+                document.getElementById('lblTippingWarningTitle').innerHTML = driverTip.title;
+                document.getElementById('lblTippingWarningDesc').innerHTML = driverTip.desc;
+            }
+
+            let isTippingDominant = false;
+            let maxSliding = 0;
+            let maxTipping = 0;
+
             if (result.lashingType === 'topOver' && result.isTippingCalculated) {
                 riskExplanationBox.classList.remove('hidden');
-                const maxSliding = Math.max(result.sliding.sideways, result.sliding.forward, result.sliding.backward);
-                const maxTipping = Math.max(result.tipping.sideways, result.tipping.forward, result.tipping.backward);
+                maxSliding = Math.max(result.sliding.sideways, result.sliding.forward, result.sliding.backward);
+                maxTipping = Math.max(result.tipping.sideways, result.tipping.forward, result.tipping.backward);
                 
                 if (maxTipping > maxSliding) {
+                    isTippingDominant = true;
                     riskExplanationBox.innerHTML = langData.resTippingDominates.replace('{maxTipping}', maxTipping).replace('{maxSliding}', maxSliding);
-                    methodSuggestionBox.classList.remove('hidden');
-                    document.getElementById('lblTippingWarningTitle').textContent = langData.lblTippingWarningTitle;
-                    document.getElementById('lblTippingWarningDesc').innerHTML = langData.lblTippingWarningDesc;
                     if (cargoBox) cargoBox.className = "w-28 h-16 bg-red-600/10 border-2 border-red-600 rounded flex flex-col items-center justify-center p-1 shadow-sm rotate-3 transition-all duration-300 z-10";
                 } else {
-                    riskExplanationBox.innerHTML = langData.resSlidingDominates; methodSuggestionBox.classList.add('hidden');
+                    riskExplanationBox.innerHTML = langData.resSlidingDominates;
                     if (cargoBox) cargoBox.className = "w-28 h-16 bg-amber-600/10 border-2 border-amber-700 rounded flex flex-col items-center justify-center p-1 shadow-sm transition-all duration-300 z-10";
                 }
                 
@@ -467,7 +553,7 @@
                 document.getElementById('resForward').textContent = `${foreDisplay} ${unitSuffix}${result.tipping.forward > result.sliding.forward ? ` (${langData.lblTipping || 'tipp'})` : ''}`;
                 document.getElementById('resBackward').textContent = `${backDisplay} ${unitSuffix}${result.tipping.backward > result.sliding.backward ? ` (${langData.lblTipping || 'tipp'})` : ''}`;
             } else {
-                riskExplanationBox.classList.add('hidden'); methodSuggestionBox.classList.add('hidden');
+                riskExplanationBox.classList.add('hidden');
                 if (cargoBox) cargoBox.className = "w-28 h-16 bg-amber-600/10 border-2 border-amber-700 rounded flex flex-col items-center justify-center p-1 shadow-sm transition-all duration-300 z-10";
                 document.getElementById('resSideways').textContent = formatCapText(result.calculatedSideways);
                 document.getElementById('resForward').textContent = formatCapText(result.calculatedForward);
@@ -476,13 +562,11 @@
             
             document.getElementById('resTotalBox').innerHTML = langData.recText.replace('{total}', `<span class="text-xl">${result.total}</span>`) + (lashingType === 'direct' ? langData.strapsinPairs : '');
             
-            // Konfigurera och rita upp rätt skiss i diagramfliken
             diagWeight.textContent = `${weightInKg} kg`;
             document.getElementById('diagLoadText').textContent = langData.diagLoadText || "Last:";
             document.getElementById('diagReqText').textContent = langData.diagReqText || "Krav";
             document.getElementById('diagFricText').textContent = `${langData.diagFricText || "Friktion"} (µ=${result.mu})`;
 
-            // DYNAMISK VÄXLING AV SVG-BLOCK: Tänder rätt bandmönster baserat på vald radiotyp
             if (lashingType === 'direct') {
                 geoTopOverLabel.classList.add('hidden'); svgTopOverGroup.classList.add('hidden');
                 geoDirectLabel.classList.remove('hidden'); svgDirectGroup.classList.remove('hidden');
@@ -493,10 +577,35 @@
 
             if (lashingType === 'direct') {
                 explanationText.innerHTML = `<div class="space-y-3"><p class="font-semibold text-gray-800">${langData.expDirectTitle}</p><div class="bg-gray-50 p-2 rounded border border-gray-100 font-mono space-y-1 text-[11px]"><p>• ${langData.diagLoadText} ${weightInKg} kg</p><p>• µ: ${mu}</p><p>• LC: ${lc} daN</p></div><ol class="list-decimal pl-4 space-y-2"><li>${langData.expDirectStep1.replace('{muPercent}', (mu*100).toFixed(0)).replace('{remPercent}', ((0.8 - mu)*100).toFixed(0))}</li><li>${langData.expDirectStep2.replace('{angle}', angleRange === 'flat' ? '30°-75°' : '75°-90°').replace('{capStrap}', angleRange === 'flat' ? (lc * 0.5 / 1000).toFixed(2) : (lc * 0.7 / 1000).toFixed(2))}</li><li>${langData.expDirectStep3}</li></ol></div>`;
+            } else if (lashingType === 'topOver' && isTippingDominant) {
+                const maxStrapDirection = result.tipping.sideways >= Math.max(result.tipping.forward, result.tipping.backward) ? (currentLang === 'sv' ? 'sidled' : 'sideways') : (currentLang === 'sv' ? 'längdled (framåt)' : 'lengthwise (forward)');
+                explanationText.innerHTML = `<div class="space-y-3">
+                    <p class="font-semibold text-gray-800">${currentLang === 'sv' ? `Varför styrs beräkningen av tipprisk (${result.total} st band)?` : `Why is the calculation governed by tipping risk (${result.total} straps)?`}</p>
+                    <div class="bg-red-50 p-2.5 rounded border border-red-200 text-[11px] space-y-1 text-red-950">
+                        <p><strong>${currentLang === 'sv' ? "Geometrisk instabilitet uppmätt:" : "Geometric instability measured:"}</strong></p>
+                        <p>• Kvot Höjd/Bredd (Sidled): ${hbRatio.toFixed(2)} (Valda rader på flaket: ${r} st)</p>
+                        <p>• Kvot Höjd/Längd (Längdled): ${hlRatio.toFixed(2)}</p>
+                    </div>
+                    <ol class="list-decimal pl-4 space-y-2">
+                        <li><strong>${currentLang === 'sv' ? "Fysikregeln för stjälpning:" : "The physical rule for tipping:"}</strong> ${currentLang === 'sv' ? "När centrifugalkraften (0,5g i sidled) eller bromskraften (0,8g framåt) flyttar godsets tyngdpunkt utanför dess basplatta, tippar godset. Friktionen (µ) hjälper inte till överhuvudtaget vid ren stjälpning!" : "When centrifugal force (0.5g sideways) or braking force (0.8g forward) shifts the center of gravity outside its base, the cargo tilts. Friction (µ) provides zero assistance against tipping!"}</li>
+                        <li><strong>${currentLang === 'sv' ? "TYA:s stjälpningsmatris:" : "The TYA Tipping Matrix:"}</strong> ${currentLang === 'sv' ? `Systemet läser av branschens lathundstabell (Sidan 13). Utifrån dina proportioner kräver vältfaktorn mekanisk lastsäkring i <strong>${maxStrapDirection}</strong> vilket ger ett direkt behov på <strong>${maxTipping} st</strong> band.` : `The system reads the official industry reference table (Page 13). Based on your proportions, the tilting force demands mechanical securing in <strong>${maxStrapDirection}</strong> resulting in a requirement of <strong>${maxTipping} straps</strong>.`}</li>
+                        <li><strong>${currentLang === 'sv' ? "Justering för försträckning (STF):" : "Adjustment for Pre-tension (STF):"}</strong> ${currentLang === 'sv' ? `Dina spännband har försträckningen STF = ${stf} daN. Det ger en effektfaktor på ${result.factor}x mot tabellens referensband.` : `Your straps have a pre-tension of STF = ${stf} daN. This yields an efficiency factor of ${result.factor}x against the table reference strap.`}</li>
+                        <li><strong>${currentLang === 'sv' ? "Slutlig sammanställning:" : "Final comparison:"}</strong> ${currentLang === 'sv' ? `Glidskyddet krävde bara ${maxSliding} st band, men eftersom tipprisken kräver ${maxTipping} st band, drar kalkylatorn upp rekommendationen till det högsta värdet: <strong>${result.total} st band</strong> för att säkra mot stjälpning.` : `Sliding protection only required ${maxSliding} straps, but since the tipping hazard demands ${maxTipping} straps, the calculator locks the recommendation to the highest value: <strong>${result.total} straps</strong> to guarantee stability.`}</li>
+                    </ol>
+                </div>`;
             } else {
                 const cleanBaseValueForward = parseFloat(result.rawForward || 0.81);
-                explanationText.innerHTML = `<div class="space-y-3"><p class="font-semibold text-gray-800">${langData.expTopOverTitle.replace('{total}', result.total).replace('{weightKg}', weightInKg)}</p><ol class="list-decimal pl-4 space-y-2"><li>${langData.expTopOverStep1.replace('{muPercent}', (mu*100).toFixed(0)).replace('{remPercent}', Math.round((0.8 - mu) * 100)).replace('{weightKg}', weightInKg).replace('{remDecimal}', (0.8 - mu).toFixed(2)).replace('{remForceKg}', Math.round(weightInKg * (0.8 - mu)))}</li><li>${langData.expTopOverStep2.replace('{mu}', mu).replace(/{baseVal}/g, cleanBaseValueForward.toFixed(2)).replace('{baseValKg}', Math.round(cleanBaseValueForward * 1000))}</li><li>${langData.expTopOverStep3.replace(/{stf}/g, stf).replace('{factor}', (stf / 400).toFixed(2))}</li><li>${langData.expTopOverStep4.replace('{angleRangeText}', angleRange === 'flat' ? "Flack" : "Brant").replace('{angleExplText}', "").replace(/{baseVal}/g, cleanBaseValueForward.toFixed(2)).replace('{factor}', (stf / 400).toFixed(2)).replace('{angleMath}', "").replace(/{trueCap}/g, (cleanBaseValueForward * parseFloat(result.factor)).toFixed(2)).replace('{trueCapKg}', Math.round(cleanBaseValueForward * parseFloat(result.factor) * 1000))}</li><li>${langData.expTopOverStep5.replace(/{weightTons}/g, weightInTons.toFixed(2)).replace(/{trueCap}/g, (cleanBaseValueForward * parseFloat(result.factor)).toFixed(2)).replace('{exactStraps}', (weightInTons / (cleanBaseValueForward * parseFloat(result.factor))).toFixed(2)).replace(/{total}/g, result.total).replace(/{remForceKg}/g, Math.round(weightInKg * (0.8 - mu))).replace(/{trueCapKg}/g, Math.round(cleanBaseValueForward * parseFloat(result.factor) * 1000)).replace('{mathStraps}', "")}</li></ol></div>`;
-            }
+                explanationText.innerHTML = `<div class="space-y-3">
+                    <p class="font-semibold text-gray-800">${langData.expTopOverTitle.replace('{total}', result.total).replace('{weightKg}', weightInKg)}</p>
+                    <ol class="list-decimal pl-4 space-y-2">
+                        <li>${langData.expTopOverStep1.replace('{muPercent}', (mu*100).toFixed(0)).replace('{remPercent}', Math.round((0.8 - mu) * 100)).replace('{weightKg}', weightInKg).replace('{remDecimal}', (0.8 - mu).toFixed(2)).replace('{remForceKg}', Math.round(weightInKg * (0.8 - mu)))}</li>
+                        <li>${langData.expTopOverStep2.replace('{mu}', mu).replace(/{baseVal}/g, cleanBaseValueForward.toFixed(2)).replace('{baseValKg}', Math.round(cleanBaseValueForward * 1000))}</li>
+                        <li>${langData.expTopOverStep3.replace(/{stf}/g, stf).replace('{factor}', (stf / 400).toFixed(2))}</li>
+                        <li>${langData.expTopOverStep4.replace('{angleRangeText}', angleRange === 'flat' ? (currentLang === 'sv' ? "Flack vinkel" : "Flat angle") : (currentLang === 'sv' ? "Brant vinkel" : "Steep angle")).replace('{angleExplText}', angleRange === 'flat' ? (currentLang === 'sv' ? " (Effekten halveras)" : " (Effect halved)") : "").replace('{angleMath}', angleRange === 'flat' ? "× 0.5" : "").replace('{factor}', (stf / 400).toFixed(2)).replace(/{baseVal}/g, cleanBaseValueForward.toFixed(2)).replace(/{trueCap}/g, (cleanBaseValueForward * parseFloat(result.factor)).toFixed(2)).replace('{trueCapKg}', Math.round(cleanBaseValueForward * parseFloat(result.factor) * 1000))}</li>
+                        <li>${langData.expTopOverStep5.replace(/{weightTons}/g, weightInTons.toFixed(2)).replace(/{baseVal}/g, cleanBaseValueForward.toFixed(2)).replace(/{trueCap}/g, (cleanBaseValueForward * parseFloat(result.factor)).toFixed(2)).replace('{exactStraps}', (weightInTons / (cleanBaseValueForward * parseFloat(result.factor))).toFixed(2)).replace(/{total}/g, result.total).replace(/{remForceKg}/g, Math.round(weightInKg * (0.8 - mu))).replace(/{trueCapKg}/g, Math.round(cleanBaseValueForward * parseFloat(result.factor) * 1000)).replace('{mathStraps}', Math.ceil(weightInTons / (cleanBaseValueForward * parseFloat(result.factor))))}</li>
+                    </ol>
+                </div>`;
+             }
             
             switchTab(tabCapBtn, paneCap);
             physicsDiagram.classList.remove('hidden'); resultDiv.classList.remove('hidden');
