@@ -2,8 +2,7 @@ version: '3.8'
 
 services:
   lashing-calculator:
-    build: .
-    image: lashing-calculator:${APP_VERSION:-latest}
+    build: .                      
     container_name: lashing_calculator_app
     ports:
       - "${APP_PORT:-3000}:${CONTAINER_PORT:-3000}"
