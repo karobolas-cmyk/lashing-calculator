@@ -113,6 +113,33 @@ function findClosestTippingKey(ratio, table) {
     return matchedNum % 1 === 0 ? matchedNum.toString() : matchedNum.toFixed(1);
 }
 
+const RAW_DOMAIN = process.env.APP_DOMAIN || 'localhost:3000';
+const APP_DOMAIN = RAW_DOMAIN.startsWith('http') ? RAW_DOMAIN : `https://${RAW_DOMAIN}`;
+
+// 1. Dynamisk robots.txt baserad på din miljövariabel
+app.get('/robots.txt', (req, res) => {
+    res.type('text/plain');
+    res.send(`User-agent: *\nAllow: /\n\nSitemap: ${APP_DOMAIN}/sitemap.xml`);
+});
+
+// 2. Dynamisk sitemap.xml baserad på din miljövariabel
+app.get('/sitemap.xml', (req, res) => {
+    res.type('application/xml');
+    const today = new Date().toISOString().split('T')[0]; // Genererar dagens datum automatiskt (2026-06-21)
+    
+    const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+   <url>
+      <loc>${APP_DOMAIN}/</loc>
+      <lastmod>${today}</lastmod>
+      <changefreq>monthly</changefreq>
+      <priority>1.0</priority>
+   </url>
+</urlset>`;
+    
+    res.send(sitemap);
+});
+
 app.get('/api/options', (req, res) => { res.json(frictionData); });
 
 app.get('/api/lashing-table', (req, res) => {

@@ -9,4 +9,5 @@ services:
     environment:
       - PORT=${CONTAINER_PORT:-3000}
       - NODE_ENV=${NODE_ENV:-production}
+      - APP_DOMAIN=${APP_DOMAIN:-localhost:3000}
     restart: unless-stopped
