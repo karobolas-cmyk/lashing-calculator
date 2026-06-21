@@ -14,7 +14,6 @@ app.get('/', (req, res) => {
         if (err) {
             return res.status(500).send('Kunde inte ladda kalkylatorn.');
         }
-        console.log(process.env.GOOGLE_VERIFICATION)
         const googleCode = process.env.GOOGLE_VERIFICATION || '';
         let metaTag = '';
         
