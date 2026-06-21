@@ -14,15 +14,16 @@ app.get('/', (req, res) => {
         if (err) {
             return res.status(500).send('Kunde inte ladda kalkylatorn.');
         }
+        
         const googleCode = process.env.GOOGLE_VERIFICATION || '';
-        let metaTag = '';
+        let renderedHtml = html;
         
         if (googleCode) {
-            metaTag = `<meta name="google-site-verification" content="${googleCode}" />`;
+            const metaTag = `\n    <meta name="google-site-verification" content="${googleCode}" />`;
+            // Tvinga in taggen direkt efter stängnings-taggen för titeln
+            renderedHtml = html.replace('</title>', `</title>${metaTag}`);
         }
         
-        // Ersätt platshållaren i HTML-filen
-        const renderedHtml = html.replace('', metaTag);
         res.send(renderedHtml);
     });
 });
