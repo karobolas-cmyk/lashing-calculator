@@ -3,6 +3,31 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
+
+const fs = require('fs');
+const path = require('path');
+
+app.get('/', (req, res) => {
+    const indexPath = path.join(__dirname, 'public', 'index.html');
+    
+    fs.readFile(indexPath, 'utf8', (err, html) => {
+        if (err) {
+            return res.status(500).send('Kunde inte ladda kalkylatorn.');
+        }
+        console.log(process.env.GOOGLE_VERIFICATION)
+        const googleCode = process.env.GOOGLE_VERIFICATION || '';
+        let metaTag = '';
+        
+        if (googleCode) {
+            metaTag = `<meta name="google-site-verification" content="${googleCode}" />`;
+        }
+        
+        // Ersätt platshållaren i HTML-filen
+        const renderedHtml = html.replace('', metaTag);
+        res.send(renderedHtml);
+    });
+});
+
 app.use(express.static('public'));
 
 // Complete Friction Coefficient Matrix (mu) - Fully Bilingual
