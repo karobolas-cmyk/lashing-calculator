@@ -3,25 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
     <title>Lastsäkringsräknare – Beräkna spännband & surrning enligt TYA</title>
+    
+    <!-- Injection point for Google Search Console verification (handled dynamically by server.js) -->
+    <!-- GOOGLE_VERIFICATION_PLACEHOLDER -->
+    
+    <!-- Standard SEO Meta Tags -->
     <meta name="description" content="Gratis digital lastsäkringsräknare för åkeri och chaufförer. Beräkna antal spännband för överfallssurrning och direktsurrning enligt TYA:s lathundstabeller och EN 12195-1.">
     <meta name="keywords" content="lastsäkring, lastsäkringsräknare, spännband kalkylator, överfallssurrning, direktsurrning, TYA lathund, EN 12195-1, räkna ut spännband, surrning trailer">
     <meta name="author" content="Lashing Calculator App">
     <meta name="robots" content="index, follow">
 
+    <!-- Open Graph / Facebook (For social media embedding) -->
     <meta property="og:type" content="website">
+    <meta id="ogUrlMeta" property="og:url" content="">
     <meta property="og:title" content="Lastsäkringsräknare – Beräkna spännband online">
     <meta property="og:description" content="Snabbt, mobilsäkert verktyg för chaufförer. Räkna ut antal surrningar baserat på vikt, friktion och TYA:s tipptest direkt i mobilen på flaket.">
-    <meta id="ogUrlMeta" property="og:url" content="">
 
+    <!-- Canonical URL (Handled dynamically by the script below) -->
     <link id="canonicalLink" rel="canonical" href="">
 
+    <!-- External Resources -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚚</text></svg>">
     
     <script>
-        // Sätt domänen dynamiskt i HTML-headern baserat på nuvarande adress (för snygga delningar)
+        // Dynamically set the domain links based on current location (for link sharing integrity)
         document.addEventListener("DOMContentLoaded", () => {
             const currentUrl = window.location.href;
             document.getElementById('canonicalLink').setAttribute('href', currentUrl);
